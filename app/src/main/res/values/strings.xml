@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">NewsApp</string>
+    <string name="source">the-times-of-india</string>
+    <string name="api_key">1d57cb914a7b4de5a3023176e3a72d59</string>
+</resources>
