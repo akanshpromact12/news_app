@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#d43e3c</color>
+    <color name="colorPrimaryDark">#e12f2c</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorShare">#000</color>
+    <color name="colorDesc">#505050</color>
+    <color name="colorNewsCard">#FFF</color>
+    <color name="mainColor">#c1c1c1</color>
+    <color name="readStoryColor">#3199f4</color>
 </resources>

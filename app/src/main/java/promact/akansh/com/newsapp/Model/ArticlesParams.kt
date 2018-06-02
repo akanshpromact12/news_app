@@ -5,7 +5,7 @@ package promact.akansh.com.newsapp.Model
  */
 data class ArticlesParams (
     val source: SourceParams,
-    val author: String,
+    val author: String?,
     val title: String,
     val description: String,
     val url: String,
