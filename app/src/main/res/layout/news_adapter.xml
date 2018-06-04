@@ -22,13 +22,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/newsImage"
-                android:paddingBottom="@dimen/size_4"
-                android:paddingStart="@dimen/size_4"
-                android:paddingEnd="@dimen/size_4"
+            <RelativeLayout
+                android:id="@+id/imageLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="200dp">
+
+                <ImageView
+                    android:id="@+id/newsImage"
+                    android:paddingBottom="@dimen/size_4"
+                    android:paddingStart="@dimen/size_4"
+                    android:paddingEnd="@dimen/size_4"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/placeholder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ProgressBar
+                    android:id="@+id/imageProgress"
+                    android:layout_centerInParent="true"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp" />
+
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/newsHeadline"
@@ -37,7 +52,7 @@
                 android:textColor="@android:color/black"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/newsImage"
+                android:layout_below="@+id/imageLayout"
                 android:paddingTop="@dimen/size_4"
                 android:paddingBottom="@dimen/size_4"
                 android:paddingStart="@dimen/size_4"

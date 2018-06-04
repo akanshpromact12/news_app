@@ -6,6 +6,6 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface ApiInterface {
-    @GET("top-headlines")
-    fun getLatestNews(@Query("sources") sources: String, @Query("apiKey") apiKey: String): Call<News>
+    @GET("everything")
+    fun getLatestNews(@Query("sources") sources: String, @Query("pageSize") pageSize: Int, @Query("page") page: Int, @Query("apiKey") apiKey: String): Call<News>
 }

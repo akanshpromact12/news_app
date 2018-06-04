@@ -8,15 +8,22 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -54,6 +61,19 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsAdapterVie
 
         Glide.with(context)
                 .load(articlesParams.getUrlToImage())
+                .apply(new RequestOptions().placeholder(R.drawable.placeholder))
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        holder.imageProgress.setVisibility(View.INVISIBLE);
+                        return false;
+                    }
+                })
                 .into(holder.newsImage);
         holder.relLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,7 +86,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsAdapterVie
                 context.startActivity(intent);
             }
         });
-        holder.headline.setText(articlesParams.getTitle());
         holder.newsDesc.setVisibility(View.GONE);
         holder.newsDesc.setText(articlesParams.getDescription());
         holder.share.setOnClickListener(new View.OnClickListener() {
@@ -94,16 +113,18 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsAdapterVie
             }
         });
         String dateString = articlesParams.getPublishedAt();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
         Date date;
         String convertedDate = "";
         String currentDate = "";
         String currentTime = "";
         String convertedTime = "";
+        String time = "";
         try {
             date = dateFormat.parse(dateString);
 
             convertedDate = new SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault()).format(date);
+            time = new SimpleDateFormat("HH:mm aaa", Locale.getDefault()).format(date);
             currentDate = new SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault()).format(new Date());
             convertedTime = new SimpleDateFormat("MMMM dd, yyyy - HH:mm", Locale.getDefault()).format(date);
             currentTime = new SimpleDateFormat("MMMM dd, yyyy - HH:mm", Locale.getDefault()).format(new Date());
@@ -130,6 +151,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsAdapterVie
         } else {
             dateStr = convertedDate;
         }
+        holder.headline.setText(articlesParams.getTitle() + " - " + time);
         holder.date.setText(dateStr);
         holder.author.setText(author);
     }
@@ -168,6 +190,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsAdapterVie
         TextView headline, newsDesc, viewMore, date, author;
         ImageView newsImage, share;
         RelativeLayout relLayout;
+        ProgressBar imageProgress;
 
         NewsAdapterViewHolder(View itemView) {
             super(itemView);
@@ -179,6 +202,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsAdapterVie
             viewMore = itemView.findViewById(R.id.readStory);
             relLayout = itemView.findViewById(R.id.mainLayout);
             share = itemView.findViewById(R.id.shareIcon);
+            imageProgress = itemView.findViewById(R.id.imageProgress);
         }
     }
 }

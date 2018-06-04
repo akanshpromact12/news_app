@@ -2,75 +2,78 @@ package promact.akansh.com.newsapp.Main
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.util.Log
-import android.view.View
-import android.widget.ProgressBar
-import promact.akansh.com.newsapp.Adapter.NewsAdapter
-import promact.akansh.com.newsapp.Model.ArticlesParams
-import promact.akansh.com.newsapp.Model.News
-import promact.akansh.com.newsapp.Network.ApiClient
-import promact.akansh.com.newsapp.Network.ApiInterface
+import android.support.design.widget.TabLayout
+import android.support.v4.view.ViewPager
+import android.support.v7.widget.Toolbar
+import promact.akansh.com.newsapp.Adapter.ViewPagerAdapter
+import promact.akansh.com.newsapp.News.GeneralNews
 import promact.akansh.com.newsapp.R
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var newsFrontRecycler: RecyclerView
-    private lateinit var swipeRefresh: SwipeRefreshLayout
-    private var articles = ArrayList<ArticlesParams>()
-    private lateinit var progress: ProgressBar
-    private val TAG = MainActivity::class.java.name
+    private lateinit var toolbar: Toolbar
+    private lateinit var tabLayout: TabLayout
+    private lateinit var viewPager: ViewPager
+    private lateinit var general: GeneralNews
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        newsFrontRecycler = findViewById(R.id.recyclerNewsFront)
-        swipeRefresh = findViewById(R.id.swipeRefresh)
-        progress = findViewById(R.id.progress)
-        newsFrontRecycler.layoutManager = LinearLayoutManager(this@MainActivity)
-        progress.visibility = View.VISIBLE
-        getNews(false)
-        swipeRefresh.setOnRefreshListener {
-            refreshItems()
-        }
-    }
+        toolbar = findViewById(R.id.toolbar)
+        viewPager = findViewById(R.id.viewpager)
+        tabLayout = findViewById(R.id.tabs)
 
-    private fun refreshItems() {
-        progress.visibility = View.INVISIBLE
-        getNews(true)
-    }
+        setSupportActionBar(toolbar)
+        general = GeneralNews()
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        setupViePager(viewPager)
+        tabLayout.setupWithViewPager(viewPager)
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabReselected(tab: TabLayout.Tab?) {
 
-    private fun onItemsLoadComplete(isRefreshed: Boolean, articles: ArrayList<ArticlesParams>) {
-        val adapter = NewsAdapter(this@MainActivity, articles)
-        adapter.notifyDataSetChanged()
-
-        newsFrontRecycler.adapter = adapter
-        if (isRefreshed)
-            swipeRefresh.isRefreshing = false
-    }
-
-    private fun getNews(isRefreshed: Boolean) {
-        val apiInterface = ApiClient().getClient()
-                .create(ApiInterface::class.java)
-        val call = apiInterface.getLatestNews(getString(R.string.source), getString(R.string.api_key))
-        call.enqueue(object : Callback<News> {
-            override fun onFailure(call: Call<News>?, t: Throwable?) {
-                Log.e(TAG, "Some error occurred: \n${t!!.message}")
             }
 
-            override fun onResponse(call: Call<News>?, response: Response<News>?) {
-                Log.d(TAG, "Total results: ${response!!.body().totalResults}")
-                progress.visibility = View.INVISIBLE
-                articles.clear()
-                articles.addAll(response.body().articles)
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
 
-                onItemsLoadComplete(isRefreshed, articles)
+            }
+
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                when {
+                    tab!!.position == 0 -> {
+                        GeneralNews().setSource("the-times-of-india")
+                    }
+                    tab.position == 1 -> {
+                        GeneralNews().setSource("espn")
+                    }
+                    tab.position == 2 -> {
+                        GeneralNews().setSource("buzzfeed")
+                    }
+                    tab.position == 3 -> {
+                        GeneralNews().setSource("politico")
+                    }
+                    tab.position == 4 -> {
+                        GeneralNews().setSource("techcrunch")
+                    }
+                    tab.position == 5 -> {
+                        GeneralNews().setSource("business-insider")
+                    }
+                    tab.position == 6 -> {
+                        GeneralNews().setSource("medical-news-today")
+                    }
+                }
             }
         })
+    }
+
+    private fun setupViePager(viewPager: ViewPager) {
+        val adapter = ViewPagerAdapter(supportFragmentManager)
+        adapter.addFragment(GeneralNews(), "General News (India)")
+        adapter.addFragment(GeneralNews(), "Sports News")
+        adapter.addFragment(GeneralNews(), "Entertainment News")
+        adapter.addFragment(GeneralNews(), "Political News")
+        adapter.addFragment(GeneralNews(), "Technological News")
+        adapter.addFragment(GeneralNews(), "Business News")
+        adapter.addFragment(GeneralNews(), "Health News")
+        viewPager.adapter = adapter
     }
 }

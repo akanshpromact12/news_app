@@ -1,35 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
+    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context="promact.akansh.com.newsapp.Main.MainActivity">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefresh"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="promact.akansh.com.newsapp.Main.MainActivity">
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <LinearLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            app:tabMode="scrollable"
+            app:tabGravity="center"/>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerNewsFront"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+    </android.support.design.widget.AppBarLayout>
 
-        </LinearLayout>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    </android.support.v4.widget.SwipeRefreshLayout>
-
-    <ProgressBar
-        android:id="@+id/progress"
-        android:layout_centerInParent="true"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:visibility="invisible" />
-
-</RelativeLayout>
+</LinearLayout>
